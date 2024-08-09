@@ -1,0 +1,106 @@
+//-------------------------------------------------------------------------------------------------
+// Company:           IEEE CASS Costa Rica Section Chapter
+// Engineer:          Erick Andres Obregon Fonseca
+//
+// Create Date:       2024-08-04
+// Design Name:       Arithmetic Logic Unit (ALU) SVA Assertions
+// Module Name:       ALU Practical case - alu_sva.sv
+// Project Name:      ALU Practical case
+// Target Devices:    FPGA, ASIC
+// Tool Versions:
+//                    - Quartus Prime Lite 19.1
+//                    - Vivado 2020.1
+//                    - ModelSim 10.7
+// Description:
+//                    This file defines SystemVerilog Assertions (SVA) for verifying the 
+//                    functionality of the ALU. It includes properties and sequences to check
+//                    the correctness of the ALU operations and behavior during simulation.
+//
+// Dependencies:
+//                    UVM library
+// 
+// Revision:
+//                    1.0 - Initial Release
+//                    2024-08-04 - Erick Andres Obregon Fonseca - Designed for educational purposes
+//
+// Additional Comments:
+//                    The SVA assertions in this file are used to monitor and verify the 
+//                    ALU's functionality, ensuring that it behaves according to the specified 
+//                    requirements and catches any discrepancies during simulation.
+//
+// Copyright (c) 2024 IEEE CASS Costa Rica Section Chapter.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without modification, are permitted
+// provided that the following conditions are met:
+// 1. Redistributions of source code must retain the above copyright notice, this list of
+//    conditions and the following disclaimer.
+// 2. Redistributions in binary form must reproduce the above copyright notice, this list of
+//    conditions and the following disclaimer in the documentation and/or other materials provided
+//    with the  distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR
+// IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+// FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR
+// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+// OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+// POSSIBILITY OF SUCH DAMAGE.
+//-------------------------------------------------------------------------------------------------
+// Assertion for the addition operation
+// Checks if the selection signal (`sel`) is 2'b00, and if so, verifies that the result is the sum
+// of `op_a` and `op_b`
+asrt_add: assert property (
+  // Trigger on the positive edge of the clock
+  @(posedge alu_if.clk)
+  // Check if the selection signal is 2'b00
+  alu_if.sel === 2'b00 |->
+  // Verify that result equals the sum of op_a and op_b
+  alu_if.op_a + alu_if.op_b == alu_if.result
+)
+// Report an error if the assertion fails
+else `uvm_error("ASRT_ADD", "Result doesn't match");
+
+// Assertion for the subtraction operation
+// Checks if the selection signal (`sel`) is 2'b01, and if so, verifies that the result is the
+// difference of `op_a` and `op_b`
+asrt_sub: assert property (
+  // Trigger on the positive edge of the clock
+  @(posedge alu_if.clk)
+  // Check if the selection signal is 2'b01
+  alu_if.sel === 2'b01 |->
+  // Verify that result equals the difference of op_a and op_b
+  alu_if.op_a - alu_if.op_b === alu_if.result
+)
+// Report an error if the assertion fails
+else `uvm_error("ASRT_SUB", "Result doesn't match");
+
+// Assertion for the bitwise AND operation
+// Checks if the selection signal (`sel`) is 2'b10, and if so, verifies that the result is the
+// bitwise AND of `op_a` and `op_b`
+asrt_and: assert property (
+  // Trigger on the positive edge of the clock
+  @(posedge alu_if.clk)
+  // Check if the selection signal is 2'b10
+  alu_if.sel === 2'b10 |->
+  // Verify that result equals the bitwise AND of op_a and op_b
+  (alu_if.op_a & alu_if.op_b) === alu_if.result
+)
+// Report an error if the assertion fails
+else `uvm_error("ASRT_AND", "Result doesn't match");
+
+// Assertion for the bitwise OR operation
+// Checks if the selection signal (`sel`) is 2'b11, and if so, verifies that the result is the
+// bitwise OR of `op_a` and `op_b`
+asrt_or: assert property (
+  // Trigger on the positive edge of the clock
+  @(posedge alu_if.clk)
+  // Check if the selection signal is 2'b11
+  alu_if.sel === 2'b11 |->
+  // Verify that result equals the bitwise OR of op_a and op_b
+  (alu_if.op_a | alu_if.op_b) === alu_if.result
+)
+// Report an error if the assertion fails
+else `uvm_error("ASRT_OR", "Result doesn't match");
